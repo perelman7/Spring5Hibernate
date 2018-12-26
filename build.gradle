@@ -28,9 +28,11 @@ repositories {
 dependencies {
 	implementation('org.springframework.boot:spring-boot-starter')
 	testImplementation('org.springframework.boot:spring-boot-starter-test')
-	compile 'org.springframework.boot:spring-boot-starter-data-jpa'
+	compile ('org.springframework.boot:spring-boot-starter-data-jpa')
+	compileOnly('org.projectlombok:lombok')
 	runtimeOnly('org.postgresql:postgresql')
 	compile("org.springframework.boot:spring-boot-starter-web")
-	compile group: 'org.hibernate', name: 'hibernate-core', version: '5.3.7.Final'
-	compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: '5.3.7.Final'
+	//Exemple for group
+	//compile ([group: 'org.hibernate', name: 'hibernate-core', version: '5.3.7.Final'],
+	//		[group: 'org.hibernate', name: 'hibernate-entitymanager', version: '5.3.7.Final'])
 }
