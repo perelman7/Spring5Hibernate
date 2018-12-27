@@ -32,6 +32,8 @@ dependencies {
 	compileOnly('org.projectlombok:lombok')
 	runtimeOnly('org.postgresql:postgresql')
 	compile("org.springframework.boot:spring-boot-starter-web")
+	// https://mvnrepository.com/artifact/com.google.common/google-collect
+
 	//Exemple for group
 	//compile ([group: 'org.hibernate', name: 'hibernate-core', version: '5.3.7.Final'],
 	//		[group: 'org.hibernate', name: 'hibernate-entitymanager', version: '5.3.7.Final'])

@@ -3,16 +3,15 @@ package com.hibernateTest.hibernateTest.controller;
 import com.hibernateTest.hibernateTest.model.Department;
 import com.hibernateTest.hibernateTest.repository.DepartmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/deps")
 public class DepartmentController {
 
     @Autowired
+    @Qualifier("departmentRepository")
     private DepartmentRepository repository;
 
     @GetMapping(path = "/add")
