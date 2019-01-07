@@ -4,5 +4,5 @@ import com.hibernateTest.hibernateTest.model.Employee;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-@Repository("employeeRepository")
-public interface EmployeeRepository extends CrudRepository<Employee, Integer> { }
+@Repository("employeeRepo")
+public interface EmployeeRepository extends CrudRepository<Employee, Integer> {}

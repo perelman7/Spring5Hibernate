@@ -1,7 +1,7 @@
 package com.hibernateTest.hibernateTest.controller;
 
-import com.hibernateTest.hibernateTest.model.Department;
-import com.hibernateTest.hibernateTest.service.DepartmentService;
+import com.hibernateTest.hibernateTest.model.Employee;
+import com.hibernateTest.hibernateTest.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -13,37 +13,37 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/deps")
-public class DepartmentController {
+@RequestMapping("/emps")
+public class EmployeeController {
 
     @Autowired
-    @Qualifier("defoultDepartmentService")
-    private DepartmentService service;
+    @Qualifier("defoultEmployeeService")
+    private EmployeeService service;
 
     @GetMapping(path = "/all")
-    public ResponseEntity<List<Department>> getAll(){
-        List<Department> departments = service.getAll();
-        if (departments.size() > 0){
-            return ResponseEntity.status(HttpStatus.OK).body(departments);
-        }else{
+    public ResponseEntity<List<Employee>> getAll(){
+        List<Employee> employees = service.getAll();
+        if(employees.size() > 0){
+            return ResponseEntity.status(HttpStatus.OK).body(employees);
+        }else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 
     @PostMapping(path = "/add")
-    public ResponseEntity<Department> add(@Valid Department dep){
+    public ResponseEntity<Employee> add(@Valid Employee emp){
         try {
-            Department department = service.add(dep);
-            return ResponseEntity.status(HttpStatus.OK).body(department);
+            Employee employee = service.add(emp);
+            return ResponseEntity.status(HttpStatus.OK).body(employee);
         }catch (Exception ex){}
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
     }
 
     @PutMapping(path = "/update")
-    public ResponseEntity<Department> update(@Valid Department dep){
+    public ResponseEntity<Employee> update(@Valid Employee emp){
         try {
-            Department department = service.update(dep);
-            return ResponseEntity.status(HttpStatus.OK).body(department);
+            Employee employee = service.update(emp);
+            return ResponseEntity.status(HttpStatus.OK).body(employee);
         }catch (Exception ex){}
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
     }
