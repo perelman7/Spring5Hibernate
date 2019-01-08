@@ -5,12 +5,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.view.RedirectView;
 
+import java.security.Principal;
+
 @RestController
-@RequestMapping("/")
+@RequestMapping
 public class StartController {
 
     @GetMapping
     public RedirectView mainPage(){
-        return new RedirectView("/SpringTest/main.html");
+        return new RedirectView("/login.html");
+    }
+
+    @GetMapping("/login/google")
+    public Principal user(Principal principal){
+        return principal;
     }
 }

@@ -6,14 +6,14 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
 @SpringBootApplication
-public class HibernateTestApplication extends SpringBootServletInitializer{
+public class HibernateTestApplication extends SpringBootServletInitializer {
 
-	public static void main(String[] args) {
-		SpringApplication.run(HibernateTestApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(HibernateTestApplication.class, args);
+    }
 
-	@Override
-	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
-		return builder.sources(HibernateTestApplication.class);
-	}
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+        return builder.sources(HibernateTestApplication.class);
+    }
 }
