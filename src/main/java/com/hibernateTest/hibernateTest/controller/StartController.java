@@ -16,8 +16,4 @@ public class StartController {
         return new RedirectView("/login.html");
     }
 
-    @GetMapping("/login/google")
-    public Principal user(Principal principal){
-        return principal;
-    }
 }

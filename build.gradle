@@ -38,17 +38,6 @@ dependencies {
 
 	compile('org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:2.0.0.RELEASE')
 	compile('org.springframework.boot:spring-boot-starter-security')
-
 	compile('org.springframework.boot:spring-boot-starter-jersey')
-	
-	//compile( group: 'javax.servlet', name: 'servlet-api', version: '2.5')
 
-
-
-
-
-
-	//Exemple for group
-	//compile ([group: 'org.hibernate', name: 'hibernate-core', version: '5.3.7.Final'],
-	//		[group: 'org.hibernate', name: 'hibernate-entitymanager', version: '5.3.7.Final'])
 }
