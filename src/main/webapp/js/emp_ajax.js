@@ -11,6 +11,9 @@ function setupButtonClickHandlers(){
     $(document).on( "click", "button.add_emps", add_form_emp);
     $(document).on( "click", "button.cancel_emps", cansel_update_emp);
     $(document).on( "click", "button.save_emps", save_update_emp);
+    $(document).on("click", "button.close_dialog_e", close_dialog_e);
+
+    $(document).on("click", "button.all_emps", createTable);
 }
 
 //locale variables
@@ -29,9 +32,9 @@ function getAllEmps(){
             createTable();
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            $('#resp_e').html("<dialog id=\"dialog\"><p>"+"Server error, can`t find data about departments"+
+            $('#resp_e').html("<dialog id=\"dialog_e\"><p>"+"Server error, can`t find data about departments"+
                 "</p><button class=\"close_dialog btn btn-outline-dark\">Close</button></dialog>");
-            var dialog = document.getElementById('dialog');
+            var dialog = document.getElementById('dialog_e');
             dialog.show();
         }
     });
@@ -46,7 +49,8 @@ function delete_emp(){
 
     $.ajax({
         url : 'emps/delete',
-        type: 'delete',
+        //type: 'delete',
+        type: 'post',
         data: {
             id: id
         },
@@ -56,22 +60,22 @@ function delete_emp(){
             allEmps.splice(index, 1);
             createTable();
 
-            $('#resp_e').html("<dialog id=\"dialog\"><p>"+"Employee was deleted"+
-                "</p><button class=\"close_dialog btn btn-outline-dark\">Close</button></dialog>");
-            var dialog = document.getElementById('dialog');
+            $('#resp_e').html("<dialog id=\"dialog_e\"><p>"+"Employee was deleted"+
+                "</p><button class=\"close_dialog_e btn btn-outline-dark\">Close</button></dialog>");
+            var dialog = document.getElementById('dialog_e');
             dialog.show();
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            $('#resp_e').html("<dialog id=\"dialog\"><p>"+"Employee can`t be deleted"+
-                "</p><button class=\"close_dialog btn btn-outline-dark\">Close</button></dialog>");
-            var dialog = document.getElementById('dialog');
+            $('#resp_e').html("<dialog id=\"dialog_e\"><p>"+"Employee can`t be deleted"+
+                "</p><button class=\"close_dialog_e btn btn-outline-dark\">Close</button></dialog>");
+            var dialog = document.getElementById('dialog_e');
             dialog.show();
         }
     });
 }
 function add_form_emp(){
     console.log("add_form_emp click");
-
+    maxPage = Math.ceil(allEmps.length / 10);
     currantPage = maxPage;
     createTable();
 
@@ -133,15 +137,15 @@ function save_update_emp(){
             allEmps[index].departmentName = dep_name;
             createTable();
 
-            $('#resp_e').html("<dialog id=\"dialog\"><p>"+"Employee was updated"+
-                "</p><button class=\"close_dialog btn btn-outline-dark\">Close</button></dialog>");
-            var dialog = document.getElementById('dialog');
+            $('#resp_e').html("<dialog id=\"dialog_e\"><p>"+"Employee was updated"+
+                "</p><button class=\"close_dialog_e btn btn-outline-dark\">Close</button></dialog>");
+            var dialog = document.getElementById('dialog_e');
             dialog.show();
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            $('#resp_e').html("<dialog id=\"dialog\"><p>"+"Fill in fields: surname, name, department"+
-                "</p><button class=\"close_dialog btn btn-outline-dark\">Close</button></dialog>");
-            var dialog = document.getElementById('dialog');
+            $('#resp_e').html("<dialog id=\"dialog_e\"><p>"+"Fill in fields: surname, name, department"+
+                "</p><button class=\"close_dialog_e btn btn-outline-dark\">Close</button></dialog>");
+            var dialog = document.getElementById('dialog_e');
             dialog.show();
         }
     });
@@ -197,15 +201,15 @@ function save_add_emp(){
                         'dob': dataOfBirthday, 'department': {"id":dep_id, "depName" : dep_name, "description": descr}});
                 createTable();
 
-                $('#resp_e').html("<dialog id=\"dialog\"><p>"+"Employee was added"+
-                    "</p><button class=\"close_dialog btn btn-outline-dark\">Close</button></dialog>");
-                var dialog = document.getElementById('dialog');
+                $('#resp_e').html("<dialog id=\"dialog_e\"><p>"+"Employee was added"+
+                    "</p><button class=\"close_dialog_e btn btn-outline-dark\">Close</button></dialog>");
+                var dialog = document.getElementById('dialog_e');
                 dialog.show();
             },
             error: function (jqXHR, textStatus, errorThrown) {
-                $('#resp_e').html("<dialog id=\"dialog\"><p>"+"Fill in fields: surname, name, department"+
-                    "</p><button class=\"close_dialog btn btn-outline-dark\">Close</button></dialog>");
-                var dialog = document.getElementById('dialog');
+                $('#resp_e').html("<dialog id=\"dialog_e\"><p>"+"Fill in fields: surname, name, department"+
+                    "</p><button class=\"close_dialog_e btn btn-outline-dark\">Close</button></dialog>");
+                var dialog = document.getElementById('dialog_e');
                 dialog.show();
             }
         });
@@ -213,6 +217,17 @@ function save_add_emp(){
 }
 function createTable(val){
     $('#resp_ajax_emps').empty();
+    var index = Number(val);
+    maxPage = Math.ceil(allEmps.length / 10);
+    console.log("------>");
+    console.log(index);
+    if(!isNaN(index)){
+        var position = allEmps.map(function(e) { return e.id; }).indexOf(index);
+        currantPage = Math.ceil((position + 1) / 10);
+        console.log("Create index: " + index + " , currantPage: " + currantPage );
+    }
+
+
     var start = 0 + (10 * (currantPage-1));
     var end = 10 + (10 * (currantPage-1));
     console.log("Create table");
@@ -220,13 +235,13 @@ function createTable(val){
     var tableE = allEmps.slice(start, end);
     console.log("table: ")
     console.log(tableE);
-    maxPage = Math.ceil(allEmps.length / 10);
-    var index = Number(val);
 
-    var result="<fieldset><legend>Employees table</legend><button class=\"add_emps btn btn-info\">Add</button>"+
+
+    var result="<fieldset><legend><ul class=\"bullet\"><li>Employees table</li></ul></legend><button class=\"add_emps out btn btn-primary\">Add</button>"+
         "<table class=\"employees_table table table-bordered table-sm table-hover\" id=\"employees\"><thead>"+
-        "<tr class=\"active \"><td scope=\"col\">Id</td><td scope=\"col\">Surname</td><td scope=\"col\">Name</td><td scope=\"col\">Father Name</td>"+
-        "<td scope=\"col\">Data of birthday</td><td scope=\"col\">Department</td><td colspan=\"2\">Actions</tr></thead>";
+        "<tr class=\"active bg-info\"><td class=\"text-light\" scope=\"col\">Id</td><td class=\"text-light\" scope=\"col\">Surname</td>"+
+        "<td class=\"text-light\" scope=\"col\">Name</td><td class=\"text-light\" scope=\"col\">Father Name</td>"+
+        "<td class=\"text-light\" scope=\"col\">Data of birthday</td><td class=\"text-light\" scope=\"col\">Department</td><td class=\"text-light\" colspan=\"2\">Actions</tr></thead>";
     for (i=0; i<tableE.length;i++) {
         var id = tableE[i].id;
         var surname = tableE[i].surname;
@@ -237,9 +252,6 @@ function createTable(val){
         var dep_id = tableE[i].department.id;
         var data = dataOfBirthday.split("-");
 
-        if(Number(changedDep.id) === dep_id && changedDep.departmmentName !== departmentName){
-            departmentName = changedDep.departmmentName;
-        }
         if(index === id){
 
             result+="<tr scope=\"row\"><form><td class=\"\" id=\"emp_id\">" + id + "</td>" +
@@ -262,9 +274,9 @@ function createTable(val){
                 "<td><button class=\"update_emps btn btn-outline-primary\" value=\""+id+"\">Update</button></td></tr>";
         }
     }
-    result+="</table><button style=\"float: left;\" class=\"back_emp page-link\"><-</button>"+
-        "<div style=\"float: left;\"  class=\"page-link\">"+currantPage + " / " + maxPage+"</div>"+
-        "<button style=\"float: left;\" class=\"forward_emp page-link\">-></button>"+
+    result+="</table><button style=\"float: left;\" class=\"back_emp btn btn-info\"><-</button>"+
+        "<div style=\"float: left;\"  class=\"btn btn-info\">"+currantPage + " / " + maxPage+"</div>"+
+        "<button style=\"float: left;\" class=\"forward_emp btn btn-info\">-></button>"+
         "</fieldset>";
     $('#resp_ajax_emps').html(result);
 }
@@ -284,4 +296,10 @@ function back_emp(){
     }
     console.log("page: " + currantPage);
     createTable();
+}
+
+function close_dialog_e(){
+    console.log("close the employee dialog")
+    var dialog = document.getElementById('dialog_e');
+    dialog.close();
 }

@@ -48,8 +48,8 @@ public class EmployeeController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
     }
 
-    @DeleteMapping(path = "/delete")
-    public ResponseEntity delete(@NotNull int id){
+    @PostMapping(path = "/delete")
+    public ResponseEntity delete(int id){
         service.delete(id);
         return ResponseEntity.ok(null);
     }

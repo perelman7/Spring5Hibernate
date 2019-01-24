@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @RestController
@@ -48,8 +47,8 @@ public class DepartmentController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
     }
 
-    @DeleteMapping(path = "/delete")
-    public ResponseEntity delete(@NotNull int id){
+    @PostMapping(path = "/delete")
+    public ResponseEntity delete(int id){
         service.delete(id);
         return ResponseEntity.ok(null);
     }

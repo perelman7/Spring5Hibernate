@@ -47,12 +47,14 @@ function delete_dep(){
 
     $.ajax({
         url : 'deps/delete',
-        type: 'delete',
+        //type: 'delete',
+        type: 'post',
         data: {
             id: id
         },
         success : function(data) {
-
+            console.log("delete data:");
+            console.log(data);
             var index = allDeps.map(function(e) { return e.id; }).indexOf(Number(id));
             allDeps.splice(index, 1);
             createTableD();
@@ -114,7 +116,7 @@ function save_update_dep(){
             var index = allDeps.map(function(e) { return e.id; }).indexOf(Number(id_value));
             allDeps[index].name = name_dep;
             allDeps[index].description = desc;
-            changedDep = {'id': id_value, 'departmmentName': name_dep, 'description': desc};
+            changedDep = {'id': id_value, 'depName': name_dep, 'description': desc};
             console.log("isUpdate");
             createTable();
             createTableD();
@@ -182,9 +184,10 @@ function createTableD(val){
     maxPageD = Math.ceil(allDeps.length / 10);
     var index = Number(val);
 
-    var result="<fieldset><legend>Departments table</legend><button class=\"add_deps btn btn-info\" id=\"add_dep\">Add</button>"+
-        "<table class=\"departments_table table table-bordered table-sm table-hover\"><thead>"+
-        "<tr class=\"active\"><td scope=\"col\">Id</td><td scope=\"col\">Name</td><td scope=\"col\">Description</td><td colspan=\"2\">Actions</td></tr></thead>";
+    var result="<fieldset><legend><ul class=\"bullet\"><li>Departments table</li></ul></legend><button class=\"add_deps out btn btn-primary\" id=\"add_dep\">Add</button>"+
+        "<table id=\"dep_table\" class=\"departments_table table table-bordered table-sm table-hover\"><thead>"+
+        "<tr class=\"active bg-info\"><td class=\"text-light\" scope=\"col\">Id</td><td class=\"text-light\" scope=\"col\">Name</td>"+
+        "<td class=\"text-light\" scope=\"col\">Description</td><td class=\"text-light\" colspan=\"2\">Actions</td></tr></thead>";
     for (i=0; i<table.length;i++) {
         var id = table[i].id;
         var name = table[i].depName;
@@ -197,18 +200,19 @@ function createTableD(val){
                 "<td><button class=\"save_deps btn btn-success\">save</button></td></form></tr>";
         }
         else{
-            result+="<tr scope=\"row\"><td>"+id+"</td><td>"+name+"</td><td>"+desc+"</td>"+
+            result+="<tr scope=\"row\"><td class=\"col_dep\">"+id+"</td><td class=\"col_dep\">"+name+"</td><td class=\"col_dep\">"+desc+"</td>"+
                 "<td><button class=\"delete_deps btn btn-outline-danger\" value=\""+id+"\">Delete</button></td>"+
                 "<td><button class=\"update_deps btn btn-outline-primary\" value=\""+id+"\">Update</button></td></tr>";
         }
     }
-    result+="</table><button style=\"float: left;\" class=\"back_dep page-link\"><-</button>"+
-        "<div class=\"page-link\" style=\"float: left;\">"+currantPageD + " / " + maxPageD+"</div>"+
-        "<button style=\"float: left;\" class=\"forward_dep page-link\">-></button>"+
+    result+="</table><button style=\"float: left;\" class=\"back_dep btn btn-info\"><-</button>"+
+        "<div class=\"btn btn-info\" style=\"float: left;\">"+currantPageD + " / " + maxPageD+"</div>"+
+        "<button style=\"float: left;\" class=\"forward_dep btn btn-info\">-></button>"+
         "</fieldset>";
     $('#resp_ajax_deps').html(result);
     $(".cancel_deps").on("click", cansel_update_dep);
     $(".save_deps").on("click", save_update_dep);
+    $(".col_dep").on("click", filter);
 }
 function close_dialog(){
     var dialog = document.getElementById('dialog');
@@ -230,4 +234,51 @@ function back_dep(){
     }
     console.log("page: " + currantPageD);
     createTableD();
+}
+
+
+function filter(event){
+    var id = this.parentElement.cells[0].innerText;
+    var filteredEmps = allEmps.filter(function(e) { if(e.department["id"] === Number(id)){return e} } );
+    filteredTable(filteredEmps);
+}
+
+function filteredTable(filteredTable){
+    $('#resp_ajax_emps').empty();
+    currantPage = 1;
+    var start = 0 + (10 * (currantPage-1));
+    var end = 10 + (10 * (currantPage-1));
+
+    var tableE = filteredTable.slice(start, end);
+    console.log("table: ")
+    console.log(tableE);
+    maxPage = Math.ceil(filteredTable.length / 10);
+
+    var result="<fieldset><legend><ul class=\"bullet\"><li>Employees table</li></ul></legend><button class=\"add_emps out btn btn-primary\">Add</button>"+
+        "<button class=\"all_emps out btn btn-info\">All</button>"+
+        "<table class=\"employees_table table table-bordered table-sm table-hover\" id=\"employees\"><thead>"+
+        "<tr class=\"active bg-info\"><td class=\"text-light\" scope=\"col\">Id</td><td class=\"text-light\" scope=\"col\">Surname</td>"+
+        "<td class=\"text-light\" scope=\"col\">Name</td><td class=\"text-light\" scope=\"col\">Father Name</td>"+
+        "<td class=\"text-light\" scope=\"col\">Data of birthday</td><td class=\"text-light\" scope=\"col\">Department</td><td class=\"text-light\" colspan=\"2\">Actions</tr></thead>";
+    for (i=0; i<tableE.length;i++) {
+        var id = tableE[i].id;
+        var surname = tableE[i].surname;
+        var name = tableE[i].name;
+        var fatherName = tableE[i].fatherName;
+        var dataOfBirthday = tableE[i].dob;
+        var departmentName = tableE[i].department.depName;
+        var dep_id = tableE[i].department.id;
+        var data = dataOfBirthday.split("-");
+
+        result+="<tr scope=\"row\"><td>"+id+"</td><td>"+surname+"</td><td>"+name+"</td><td>"+fatherName+"</td><td>"
+                +data[2]+"."+data[1]+"."+data[0]+"</td><td>"+departmentName+"</td>"+
+                "<td><button class=\"delete_emps btn btn-outline-danger\" value=\""+id+"\">Delete</button></td>"+
+                "<td><button class=\"update_emps btn btn-outline-primary\" value=\""+id+"\">Update</button></td></tr>";
+
+    }
+    result+="</table><button style=\"float: left;\" class=\"back_emp btn btn-info\"><-</button>"+
+        "<div style=\"float: left;\"  class=\"btn btn-info\">"+currantPage + " / " + maxPage+"</div>"+
+        "<button style=\"float: left;\" class=\"forward_emp btn btn-info\">-></button>"+
+        "</fieldset>";
+    $('#resp_ajax_emps').html(result);
 }

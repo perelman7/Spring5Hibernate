@@ -32,8 +32,9 @@ public class WebGoogleOAuthConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/", "/login**", "/js/**", "/error**").permitAll()
+                .antMatchers("/", "/login**", "/css/**", "/img/**",  "/js/**", "/error**").permitAll()
                 .anyRequest().authenticated()
                 .and().formLogin().failureForwardUrl("/login.html").loginPage("/login.html").successForwardUrl("/main.html")
                 .and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).invalidateHttpSession(true).deleteCookies("JSESSIONID").logoutSuccessUrl("/").permitAll()
