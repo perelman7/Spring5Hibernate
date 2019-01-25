@@ -1,6 +1,7 @@
 package com.hibernateTest.hibernateTest.configuration.oauth2;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoTokenServices;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -27,6 +28,7 @@ import javax.servlet.Filter;
 public class WebGoogleOAuthConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
+    @Qualifier("oauth2ClientContext")
     OAuth2ClientContext oauth2ClientContext;
 
     @Override
@@ -34,13 +36,12 @@ public class WebGoogleOAuthConfiguration extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/", "/login**", "/css/**", "/img/**",  "/js/**", "/error**").permitAll()
+                .antMatchers("/", "/login**", "/css/**", "/img/**",  "/js/**").permitAll()
                 .anyRequest().authenticated()
                 .and().formLogin().failureForwardUrl("/login.html").loginPage("/login.html").successForwardUrl("/main.html")
                 .and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).invalidateHttpSession(true).deleteCookies("JSESSIONID").logoutSuccessUrl("/").permitAll()
                 .and().addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);
     }
-
     private Filter ssoFilter() {
         OAuth2ClientAuthenticationProcessingFilter googleFilter = new OAuth2ClientAuthenticationProcessingFilter("/login/google");
         OAuth2RestTemplate googleTemplate = new OAuth2RestTemplate(google(), oauth2ClientContext);
@@ -70,4 +71,5 @@ public class WebGoogleOAuthConfiguration extends WebSecurityConfigurerAdapter {
         registration.setOrder(-100);
         return registration;
     }
+
 }
