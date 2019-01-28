@@ -133,8 +133,10 @@ function save_update_emp(){
             allEmps[index].name = name;
             allEmps[index].fatherName = fatherName;
             allEmps[index].dob = dataOfBirthday;
-            allEmps[index].dep_id = Number(dep_id);
-            allEmps[index].departmentName = dep_name;
+
+            allEmps[index].department.id = Number(dep_id);
+            allEmps[index].department.depName = dep_name;
+            allEmps[index].department.description =
             createTable();
 
             $('#resp_e').html("<dialog id=\"dialog_e\"><p>"+"Employee was updated"+
@@ -259,7 +261,7 @@ function createTable(val){
                 "<td class=\"\"><input type=\"text\" id=\"name\" value=\"" + name +"\"/></td>" +
                 "<td class=\"\"><input type=\"text\" id=\"fatherName\" value=\"" + fatherName +"\"/></td>" +
                 "<td class=\"\"><input type=\"date\" id=\"dataOfBirthday\" value=\"" + dataOfBirthday +"\"/></td>" +
-                "<td class=\"\"><select id=\"departmentName\"><option selected value=\""+dep_id+"\">"+departmentName+"</option>";
+                "<td class=\"\"><select id=\"departmentName\"><option selected value=\""+dep_id +"\">"+departmentName+"</option>";
             for (x=0; x<allDeps.length;x++) {
                 if(Number(dep_id) !== allDeps[x].id){
                     result+="<option value=\""+allDeps[x].id+"\">"+allDeps[x].depName+"</option>";

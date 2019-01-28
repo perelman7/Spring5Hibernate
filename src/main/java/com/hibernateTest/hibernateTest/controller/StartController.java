@@ -1,5 +1,9 @@
 package com.hibernateTest.hibernateTest.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
@@ -12,14 +16,29 @@ import java.util.LinkedHashMap;
 
 @RestController
 @RequestMapping
+@Api(value="start", description="redirect to the main page (main.html)")
 public class StartController {
 
     @GetMapping
+    @ApiOperation(value = "if user is authorized: return main page")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully return main page"),
+            @ApiResponse(code = 401, message = "You are not authorized to execute this request"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
+    })
     public RedirectView mainPage(){
-        return new RedirectView("/login.html");
+        return new RedirectView("main.html");
     }
 
     @GetMapping("/singinG")
+    @ApiOperation(value = "return info about authorized user", response = String.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully return info about authorized user"),
+            @ApiResponse(code = 401, message = "You are not authorized to execute this request"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
+    })
     public String singin(OAuth2Authentication auth){
         Authentication a = auth.getUserAuthentication();
         LinkedHashMap<String, String> o = (LinkedHashMap<String, String>)a.getDetails();

@@ -47,8 +47,8 @@ function delete_dep(){
 
     $.ajax({
         url : 'deps/delete',
-        //type: 'delete',
-        type: 'post',
+        type: 'delete',
+        //type: 'post',
         data: {
             id: id
         },

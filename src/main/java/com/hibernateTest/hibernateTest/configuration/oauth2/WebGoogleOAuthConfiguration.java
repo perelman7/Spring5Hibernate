@@ -36,10 +36,10 @@ public class WebGoogleOAuthConfiguration extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/", "/login**", "/css/**", "/img/**",  "/js/**").permitAll()
+                .antMatchers("/", "/v2/**", "/swagger-resources/**",  "/webjars/**", "/swagger-ui.html", "/login**", "/loginPage.html", "/css/**", "/img/**",  "/js/**").permitAll()
                 .anyRequest().authenticated()
-                .and().formLogin().failureForwardUrl("/login.html").loginPage("/login.html").successForwardUrl("/main.html")
-                .and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).invalidateHttpSession(true).deleteCookies("JSESSIONID").logoutSuccessUrl("/").permitAll()
+                .and().formLogin().failureForwardUrl("/loginPage.html").loginPage("/loginPage.html").successForwardUrl("/main.html")
+                .and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).invalidateHttpSession(true).deleteCookies("JSESSIONID")
                 .and().addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);
     }
     private Filter ssoFilter() {
@@ -71,5 +71,4 @@ public class WebGoogleOAuthConfiguration extends WebSecurityConfigurerAdapter {
         registration.setOrder(-100);
         return registration;
     }
-
 }
