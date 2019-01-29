@@ -7,13 +7,12 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.io.Serializable;
 
 @Entity
 @Table(name = "employees")
 @Data
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
-public class Employee extends DateChange implements Serializable {
+public class Employee extends DateChange {
 
     @Column(name = "surname")
     @Getter @Setter

@@ -3,16 +3,17 @@ package com.hibernateTest.hibernateTest.model;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.io.Serializable;
 
 @Entity
 @Table(name = "departments")
 @Data
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
-public class Department extends DateChange implements Serializable {
+public class Department extends DateChange{
 
     @Column(name = "name_dep")
     @Getter @Setter

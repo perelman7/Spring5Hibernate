@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 
 public class ChangeRow {
 
-
     private long id;
     private String username;
     private String tableName;

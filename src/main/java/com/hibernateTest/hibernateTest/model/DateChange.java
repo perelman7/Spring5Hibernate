@@ -5,12 +5,13 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @MappedSuperclass
 @Data
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
-public class DateChange {
+public class DateChange implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
