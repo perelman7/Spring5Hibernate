@@ -48,15 +48,11 @@ function delete_emp(){
     var id = $(this).attr("value");
 
     $.ajax({
-        url : 'emps/delete',
-        //type: 'delete',
-        type: 'post',
-        data: {
-            id: id
-        },
+        url : 'emps/delete' + '?' + $.param({'id' : id}),
+        type: 'delete',
         success : function(data) {
 
-            var index = allEmps.map(function(e) { return e.id; }).indexOf(Number(id));
+            var index = allEmps.map(function(e) { return e.id; }).indexOf(Number(data.id));
             allEmps.splice(index, 1);
             createTable();
 
@@ -189,11 +185,11 @@ function save_add_emp(){
             url : 'emps/add',
             type: 'POST',
             data: {
-                surname: surname,
-                name: name,
-                fatherName: fatherName,
-                dob: dataOfBirthday,
-                department: dep_id
+                "surname": surname,
+                "name": name,
+                "fatherName": fatherName,
+                "dob": dataOfBirthday,
+                "department": dep_id
             },
             success : function(data) {
 
@@ -233,7 +229,6 @@ function createTable(val){
     var start = 0 + (10 * (currantPage-1));
     var end = 10 + (10 * (currantPage-1));
     console.log("Create table");
-    console.log(allEmps[1].department);
     var tableE = allEmps.slice(start, end);
     console.log("table: ")
     console.log(tableE);

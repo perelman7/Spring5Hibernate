@@ -5,9 +5,9 @@ import java.util.List;
 
 public interface EmployeeService {
 
-    List<Employee> getAll() throws Exception;
-    Employee getById(int id) throws Exception;
+    List<Employee> getAll();
+    Employee getById(int id);
     Employee add(Employee employee);
-    Employee update(Employee employee) throws Exception;
-    void delete(int id) throws Exception;
+    Employee update(Employee employee);
+    boolean delete(int id);
 }

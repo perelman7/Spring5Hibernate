@@ -1,6 +1,6 @@
 package com.hibernateTest.hibernateTest.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
@@ -17,21 +17,20 @@ public class DateChange implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     @Getter @Setter
-    @ApiModelProperty(notes = "The database generated department ID") //hidden = trues
+    @ApiModelProperty(notes = "The database generated department ID")
     private int id;
 
-    @Column(name = "dateChange")
+    @Column(name = "date_change")
     @Getter @Setter
-    @JsonIgnore
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime dateChange;
 
-    @Column(name = "dateAdded")
+    @Column(name = "date_added")
     @Getter @Setter
-    @JsonIgnore
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime dateAdded;
 
     @Column(name = "version")
     @Getter @Setter
-    @JsonIgnore
     private int version;
 }

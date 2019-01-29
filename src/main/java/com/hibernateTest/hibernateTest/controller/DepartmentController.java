@@ -35,17 +35,12 @@ public class DepartmentController {
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
     })
     public ResponseEntity<List<Department>> getAll(){
-        try {
-            List<Department> departments = service.getAll();
-            if (departments.size() > 0){
-                return ResponseEntity.status(HttpStatus.OK).body(departments);
-            }else{
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-            }
-        }catch (Exception e){
-            logger.error(e.getMessage());
+         List<Department> departments = service.getAll();
+         if (departments.size() > 0){
+            return ResponseEntity.status(HttpStatus.OK).body(departments);
+         }else{
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        }
+         }
     }
 
     @PostMapping(path = "/add")
@@ -56,12 +51,11 @@ public class DepartmentController {
             @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
     })
-    public ResponseEntity<Department> add(@Valid @RequestBody Department dep){
-        try {
+    public ResponseEntity<Department> add(@Valid Department dep){
+        if(dep != null) {
             Department department = service.add(dep);
             return ResponseEntity.status(HttpStatus.OK).body(department);
-        }catch (Exception ex){
-            logger.error(ex.getMessage());
+        }else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
@@ -74,12 +68,11 @@ public class DepartmentController {
             @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
     })
-    public ResponseEntity<Department> update(@Valid @RequestBody Department dep){
-        try {
+    public ResponseEntity<Department> update(@Valid Department dep){
+        if(dep != null) {
             Department department = service.update(dep);
             return ResponseEntity.status(HttpStatus.OK).body(department);
-        }catch (Exception ex){
-            logger.error(ex.getMessage());
+        }else{
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
@@ -92,13 +85,12 @@ public class DepartmentController {
             @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
     })
-    public ResponseEntity delete(int id){
-        try {
+    public ResponseEntity delete(@RequestParam Integer id) throws Exception {
+        if(id != null){
             service.delete(id);
-            return ResponseEntity.ok(null);
-        }catch (Exception e){
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            return ResponseEntity.ok(id);
+        }else{
+            return ResponseEntity.badRequest().body(null);
         }
     }
 }

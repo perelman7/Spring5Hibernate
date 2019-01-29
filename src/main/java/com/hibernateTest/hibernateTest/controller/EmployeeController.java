@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -33,19 +32,14 @@ public class EmployeeController {
             @ApiResponse(code = 200, message = "Successfully returned list employees"),
             @ApiResponse(code = 401, message = "You are not authorized to execute this request"),
             @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
-            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
+            @ApiResponse(code = 500, message = "Internal server error")
     })
     public ResponseEntity<List<Employee>> getAll(){
-        List<Employee> employees = new ArrayList<>();
-        try {
-            employees = service.getAll();
-            if(employees.size() > 0){
-                return ResponseEntity.status(HttpStatus.OK).body(employees);
-            }else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-            }
-        }catch (Exception e){
-            logger.error(e.getMessage());
+        List<Employee> employees = service.getAll();
+        if(employees.size() > 0){
+            return ResponseEntity.status(HttpStatus.OK).body(employees);
+        }else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
@@ -54,16 +48,16 @@ public class EmployeeController {
     @ApiOperation(value = "return employee who was added", response = Employee.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully returned added employee"),
+            @ApiResponse(code = 400, message = "Uncorrected data was sent to the server"),
             @ApiResponse(code = 401, message = "You are not authorized to execute this request"),
             @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
     })
-    public ResponseEntity<Employee> add(@Valid Employee emp){
-        try {
-            Employee employee = service.add(emp);
+    public ResponseEntity<Employee> add( @Valid Employee employeeJson){
+        if(employeeJson != null){
+            Employee employee = service.add(employeeJson);
             return ResponseEntity.status(HttpStatus.OK).body(employee);
-        }catch (Exception ex){
-            logger.error(ex.getMessage());
+        }else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
@@ -72,34 +66,34 @@ public class EmployeeController {
     @ApiOperation(value = "return employee who was updated", response = Employee.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully returned updated employee"),
+            @ApiResponse(code = 400, message = "Uncorrected data was sent to the server"),
             @ApiResponse(code = 401, message = "You are not authorized to execute this request"),
             @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
     })
     public ResponseEntity<Employee> update(@Valid Employee emp){
-        try {
+        if(emp != null){
             Employee employee = service.update(emp);
             return ResponseEntity.status(HttpStatus.OK).body(employee);
-        }catch (Exception ex){
-            logger.error(ex.getMessage());
+        }else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
 
-    @PostMapping(path = "/delete")
+    @DeleteMapping(path = "/delete")
     @ApiOperation(value = "delete employee")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully employee was deleted"),
+            @ApiResponse(code = 400, message = "Uncorrected data was sent to the server"),
             @ApiResponse(code = 401, message = "You are not authorized to execute this request"),
             @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
     })
-    public ResponseEntity delete(int id){
-        try {
+    public ResponseEntity delete(@RequestParam Integer id){
+        if(id != null) {
             service.delete(id);
             return ResponseEntity.ok(null);
-        }catch (Exception e){
-            logger.error(e.getMessage());
+        }else{
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }

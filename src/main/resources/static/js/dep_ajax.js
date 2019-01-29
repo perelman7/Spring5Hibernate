@@ -43,19 +43,15 @@ function update_form_dep(){
 }
 function delete_dep(){
     console.log("del_d click");
-    var id = $(this).attr("value");
+    var id_dep = $(this).attr("value");
 
     $.ajax({
-        url : 'deps/delete',
-        type: 'delete',
-        //type: 'post',
-        data: {
-            id: id
-        },
+        url : 'deps/delete'  + '?' + $.param({'id' : id_dep}),
+        type: 'DELETE',
         success : function(data) {
             console.log("delete data:");
             console.log(data);
-            var index = allDeps.map(function(e) { return e.id; }).indexOf(Number(id));
+            var index = allDeps.map(function(e) { return e.id; }).indexOf(Number(data.id));
             allDeps.splice(index, 1);
             createTableD();
 
@@ -114,7 +110,7 @@ function save_update_dep(){
             console.log(data);
 
             var index = allDeps.map(function(e) { return e.id; }).indexOf(Number(id_value));
-            allDeps[index].name = name_dep;
+            allDeps[index].depName = name_dep;
             allDeps[index].description = desc;
             changedDep = {'id': id_value, 'depName': name_dep, 'description': desc};
             console.log("isUpdate");

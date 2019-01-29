@@ -5,9 +5,9 @@ import java.util.List;
 
 public interface DepartmentService {
 
-    List<Department> getAll() throws Exception;
-    Department getById(int id) throws Exception;
+    List<Department> getAll();
+    Department getById(int id);
     Department add(Department department);
-    Department update(Department department) throws Exception;
-    void delete(int id) throws Exception;
+    Department update(Department department);
+    boolean delete(int id);
 }

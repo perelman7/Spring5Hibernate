@@ -1,9 +1,12 @@
 package com.hibernateTest.hibernateTest.controller;
 
+import com.hibernateTest.hibernateTest.service.ChangeRowService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
@@ -18,6 +21,10 @@ import java.util.LinkedHashMap;
 @RequestMapping
 @Api(value="start", description="redirect to the main page (main.html)")
 public class StartController {
+
+    @Autowired
+    @Qualifier("defaultChangeRowService")
+    private ChangeRowService service;
 
     @GetMapping
     @ApiOperation(value = "if user is authorized: return main page")
@@ -58,4 +65,5 @@ public class StartController {
         String result = "Authorize {id: " + id + ", email: " + email + ", name: " + name + ", surname: " + surname + ", role: " +role;
         return result;
     }
+
 }
