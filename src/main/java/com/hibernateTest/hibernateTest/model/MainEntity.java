@@ -11,7 +11,8 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 @Data
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
-public class DateChange implements Serializable {
+@ToString
+public class MainEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

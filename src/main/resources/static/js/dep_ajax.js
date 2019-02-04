@@ -51,7 +51,7 @@ function delete_dep(){
         success : function(data) {
             console.log("delete data:");
             console.log(data);
-            var index = allDeps.map(function(e) { return e.id; }).indexOf(Number(data.id));
+            var index = allDeps.map(function(e) { return e.id; }).indexOf(Number(data));
             allDeps.splice(index, 1);
             createTableD();
 

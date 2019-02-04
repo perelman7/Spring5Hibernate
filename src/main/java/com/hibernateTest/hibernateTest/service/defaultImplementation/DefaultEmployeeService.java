@@ -1,4 +1,4 @@
-package com.hibernateTest.hibernateTest.service.defoultImp;
+package com.hibernateTest.hibernateTest.service.defaultImplementation;
 
 import com.hibernateTest.hibernateTest.model.Employee;
 import com.hibernateTest.hibernateTest.repository.EmployeeRepository;
@@ -38,7 +38,7 @@ public class DefaultEmployeeService implements EmployeeService {
         if (!employee.isPresent()){
             logger.error("Employee with appointed id does not exist.");
         }
-        return employee.orElse(new Employee());
+        return employee.orElse(null);
     }
 
     @Override

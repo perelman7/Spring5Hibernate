@@ -52,7 +52,9 @@ function delete_emp(){
         type: 'delete',
         success : function(data) {
 
-            var index = allEmps.map(function(e) { return e.id; }).indexOf(Number(data.id));
+            console.log("success deleted:");
+            console.log(data);
+            var index = allEmps.map(function(e) { return e.id; }).indexOf(Number(data));
             allEmps.splice(index, 1);
             createTable();
 
@@ -123,16 +125,17 @@ function save_update_emp(){
             department: dep_id
         },
         success : function(data) {
-
-            var index = allEmps.map(function(e) { return e.id; }).indexOf(Number(data.id));
-            allEmps[index].surname = surname;
+            console.log("after update:")
+            console.log(surname);
+            var index = allEmps.map(function(e) { return e.id; }).indexOf(Number(emp_id));
+            console.log(index);
             allEmps[index].name = name;
+            allEmps[index].surname = surname;
             allEmps[index].fatherName = fatherName;
             allEmps[index].dob = dataOfBirthday;
 
             allEmps[index].department.id = Number(dep_id);
             allEmps[index].department.depName = dep_name;
-            allEmps[index].department.description =
             createTable();
 
             $('#resp_e').html("<dialog id=\"dialog_e\"><p>"+"Employee was updated"+

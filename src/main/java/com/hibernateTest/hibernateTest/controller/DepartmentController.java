@@ -51,10 +51,10 @@ public class DepartmentController {
             @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
     })
-    public ResponseEntity<Department> add(@Valid Department dep){
-        if(dep != null) {
-            Department department = service.add(dep);
-            return ResponseEntity.status(HttpStatus.OK).body(department);
+    public ResponseEntity<Department> add(@Valid Department department){
+        if(department != null) {
+            Department departmentResult = service.add(department);
+            return ResponseEntity.status(HttpStatus.OK).body(departmentResult);
         }else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
@@ -68,10 +68,10 @@ public class DepartmentController {
             @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
     })
-    public ResponseEntity<Department> update(@Valid Department dep){
-        if(dep != null) {
-            Department department = service.update(dep);
-            return ResponseEntity.status(HttpStatus.OK).body(department);
+    public ResponseEntity<Department> update(@Valid Department department){
+        if(department != null) {
+            Department departmentResult = service.update(department);
+            return ResponseEntity.status(HttpStatus.OK).body(departmentResult);
         }else{
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }

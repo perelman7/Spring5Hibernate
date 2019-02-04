@@ -12,7 +12,8 @@ import javax.validation.constraints.Size;
 @Table(name = "employees")
 @Data
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
-public class Employee extends DateChange {
+@ToString(callSuper=true)
+public class Employee extends MainEntity {
 
     @Column(name = "surname")
     @Getter @Setter

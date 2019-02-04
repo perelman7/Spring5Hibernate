@@ -71,10 +71,10 @@ public class EmployeeController {
             @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
     })
-    public ResponseEntity<Employee> update(@Valid Employee emp){
-        if(emp != null){
-            Employee employee = service.update(emp);
-            return ResponseEntity.status(HttpStatus.OK).body(employee);
+    public ResponseEntity<Employee> update(@Valid Employee employee){
+        if(employee != null){
+            Employee employeeResult = service.update(employee);
+            return ResponseEntity.status(HttpStatus.OK).body(employeeResult);
         }else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }

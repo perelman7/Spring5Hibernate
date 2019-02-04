@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 
 @RestController
 @RequestMapping
@@ -47,23 +49,18 @@ public class StartController {
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
     })
     public String singin(OAuth2Authentication auth){
-        Authentication a = auth.getUserAuthentication();
-        LinkedHashMap<String, String> o = (LinkedHashMap<String, String>)a.getDetails();
+        Authentication authentication = auth.getUserAuthentication();
+        LinkedHashMap<String, String> userDetails = (LinkedHashMap<String, String>)authentication.getDetails();
 
-        Object ob = a.getAuthorities();
-        Object[] ooo = a.getAuthorities().toArray();
-        int lng = ooo.length;
-        SimpleGrantedAuthority ss = (SimpleGrantedAuthority)ooo[0];
-        String role = ss.getAuthority();
+        List authorities = (List) authentication.getAuthorities();
+        SimpleGrantedAuthority arantedAuthority = (SimpleGrantedAuthority) authorities.get(0);
+        String role = arantedAuthority.getAuthority();
 
+        String id = userDetails.get("id");
+        String email = userDetails.get("email");
+        String name = userDetails.get("given_name");
+        String surname = userDetails.get("family_name");
 
-        String id = o.get("id");
-        String email = o.get("email");
-        String name = o.get("given_name");
-        String surname= o.get("family_name");
-
-        String result = "Authorize {id: " + id + ", email: " + email + ", name: " + name + ", surname: " + surname + ", role: " +role;
-        return result;
+        return "Authorize {id: " + id + ", email: " + email + ", name: " + name + ", surname: " + surname + ", role: " +role;
     }
-
 }

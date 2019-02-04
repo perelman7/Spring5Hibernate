@@ -8,5 +8,5 @@ public interface ChangeRowService {
 
     List<ChangeRow> getAll();
     ChangeRow getById(long id);
-    ChangeRow add(ChangeRow changeRow);
+    ChangeRow addChangeRow(ChangeRow changeRow);
 }

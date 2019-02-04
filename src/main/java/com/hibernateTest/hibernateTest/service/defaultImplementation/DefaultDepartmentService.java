@@ -1,4 +1,4 @@
-package com.hibernateTest.hibernateTest.service.defoultImp;
+package com.hibernateTest.hibernateTest.service.defaultImplementation;
 
 import com.hibernateTest.hibernateTest.model.Department;
 import com.hibernateTest.hibernateTest.repository.DepartmentRepository;
@@ -38,7 +38,7 @@ public class DefaultDepartmentService implements DepartmentService {
         if(!department.isPresent()){
             logger.error("Department with appointed id does not exist.");
         }
-        return department.orElse(new Department());
+        return department.orElse(null);
     }
 
     @Override

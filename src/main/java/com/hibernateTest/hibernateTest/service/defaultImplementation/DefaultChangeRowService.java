@@ -1,4 +1,4 @@
-package com.hibernateTest.hibernateTest.service.defoultImp;
+package com.hibernateTest.hibernateTest.service.defaultImplementation;
 
 import com.hibernateTest.hibernateTest.model.ChangeRow;
 import com.hibernateTest.hibernateTest.repository.ChangeRowRepository;
@@ -18,6 +18,7 @@ public class DefaultChangeRowService implements ChangeRowService {
     @Autowired
     @Qualifier("changeRowRepository")
     private ChangeRowRepository repository;
+
     private ConvertorIteratorToList<ChangeRow> convertor = new ConvertorIteratorToList<>();
     private static Logger logger = Logger.getLogger(DefaultChangeRowService.class);
 
@@ -40,7 +41,7 @@ public class DefaultChangeRowService implements ChangeRowService {
     }
 
     @Override
-    public ChangeRow add(ChangeRow changeRow) {
+    public ChangeRow addChangeRow(ChangeRow changeRow) {
         if(changeRow == null){
             logger.error("ChangeRow is null.");
             return new ChangeRow();
