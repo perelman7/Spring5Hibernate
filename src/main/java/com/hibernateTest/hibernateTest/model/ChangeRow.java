@@ -1,9 +1,11 @@
 package com.hibernateTest.hibernateTest.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 
@@ -11,7 +13,7 @@ import java.time.LocalDateTime;
 @Table(name = "changerows")
 @Data
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
-public class ChangeRow {
+public class ChangeRow implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

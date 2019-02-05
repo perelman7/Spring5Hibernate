@@ -5,6 +5,7 @@ import com.hibernateTest.hibernateTest.model.MainEntity;
 import com.hibernateTest.hibernateTest.service.ChangeRowService;
 import com.hibernateTest.hibernateTest.service.DepartmentService;
 import com.hibernateTest.hibernateTest.service.EmployeeService;
+import com.hibernateTest.hibernateTest.service.rabbitMQ.RabbitMQSender;
 import com.hibernateTest.hibernateTest.util.MyDateTimeFormatter;
 import org.apache.log4j.Logger;
 import org.aspectj.lang.JoinPoint;
@@ -39,6 +40,10 @@ public class HistoryLogger {
     @Qualifier("defaultChangeRowService")
     private ChangeRowService changeRowService;
 
+    @Autowired
+    @Qualifier("rabbitMQSender")
+    private RabbitMQSender sender;
+
     @Before("execution(* com.hibernateTest.hibernateTest.service.defaultImplementation.*.delete(*))")
     public void deleteAdvice(JoinPoint joinPoint){
         String method = joinPoint.getSignature().getName();
@@ -52,8 +57,9 @@ public class HistoryLogger {
             this.logger.info("1.2. Result of findEntityById: " + mainEntity);
 
             if(mainEntity != null){
-                ChangeRow changeRow = this.generateChangeRow(mainEntity, null, method);
+                ChangeRow changeRow = this.generateChangeRow(mainEntity, mainEntity, method);
                 this.changeRowService.addChangeRow(changeRow);
+                this.sender.sendMessage(changeRow);
                 this.logger.info("1.3. Generated ChangeRow by method generateChangeRow() : " + changeRow);
             }
         }
@@ -65,8 +71,9 @@ public class HistoryLogger {
         this.logger.info("2.1. Method add with entity " + entity);
 
         if(entity != null){
-            ChangeRow changeRow = generateChangeRow(null, entity, method);
+            ChangeRow changeRow = generateChangeRow(entity, entity, method);
             this.changeRowService.addChangeRow(changeRow);
+            this.sender.sendMessage(changeRow);
             this.logger.info("2.2. Generated ChangeRow by method generateChangeRow() : " + changeRow);
         }
     }
@@ -88,6 +95,7 @@ public class HistoryLogger {
             if(newValue != null && oldValue != null){
                 ChangeRow changeRow = generateChangeRow(oldValue, newValue, method);
                 this.changeRowService.addChangeRow(changeRow);
+                this.sender.sendMessage(changeRow);
                 this.logger.info("3.3. Generated ChangeRow by method generateChangeRow() : " + changeRow);
             }
         }
