@@ -1,7 +1,6 @@
 package com.hibernateTest.hibernateTest.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import lombok.*;
 
 import javax.persistence.*;

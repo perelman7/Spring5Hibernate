@@ -1,4 +1,4 @@
-package com.hibernateTest.hibernateTest.service.defaultImplementation;
+package com.hibernateTest.hibernateTest.service.modelsServicesImplementation;
 
 import com.hibernateTest.hibernateTest.model.Employee;
 import com.hibernateTest.hibernateTest.repository.EmployeeRepository;

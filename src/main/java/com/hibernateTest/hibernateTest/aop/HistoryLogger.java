@@ -2,7 +2,6 @@ package com.hibernateTest.hibernateTest.aop;
 
 import com.hibernateTest.hibernateTest.model.ChangeRow;
 import com.hibernateTest.hibernateTest.model.MainEntity;
-import com.hibernateTest.hibernateTest.service.ChangeRowService;
 import com.hibernateTest.hibernateTest.service.DepartmentService;
 import com.hibernateTest.hibernateTest.service.EmployeeService;
 import com.hibernateTest.hibernateTest.service.rabbitMQ.RabbitMQSender;
@@ -37,14 +36,10 @@ public class HistoryLogger {
     private EmployeeService employeeService;
 
     @Autowired
-    @Qualifier("defaultChangeRowService")
-    private ChangeRowService changeRowService;
-
-    @Autowired
     @Qualifier("rabbitMQSender")
     private RabbitMQSender sender;
 
-    @Before("execution(* com.hibernateTest.hibernateTest.service.defaultImplementation.*.delete(*))")
+    @Before("execution(* com.hibernateTest.hibernateTest.service.modelsServicesImplementation.*.delete(*))")
     public void deleteAdvice(JoinPoint joinPoint){
         String method = joinPoint.getSignature().getName();
         Class clazz = joinPoint.getTarget().getClass();
@@ -57,28 +52,26 @@ public class HistoryLogger {
             this.logger.info("1.2. Result of findEntityById: " + mainEntity);
 
             if(mainEntity != null){
-                ChangeRow changeRow = this.generateChangeRow(mainEntity, mainEntity, method);
-                this.changeRowService.addChangeRow(changeRow);
+                ChangeRow changeRow = this.generateChangeRow(mainEntity, null, method);
                 this.sender.sendMessage(changeRow);
                 this.logger.info("1.3. Generated ChangeRow by method generateChangeRow() : " + changeRow);
             }
         }
     }
 
-    @AfterReturning(pointcut = "execution(* com.hibernateTest.hibernateTest.service.defaultImplementation.*.add(*))", returning = "entity")
+    @AfterReturning(pointcut = "execution(* com.hibernateTest.hibernateTest.service.modelsServicesImplementation.*.add(*))", returning = "entity")
     public void addAdvice(JoinPoint joinPoint, MainEntity entity){
         String method = joinPoint.getSignature().getName();
         this.logger.info("2.1. Method add with entity " + entity);
 
         if(entity != null){
-            ChangeRow changeRow = generateChangeRow(entity, entity, method);
-            this.changeRowService.addChangeRow(changeRow);
+            ChangeRow changeRow = generateChangeRow(null, entity, method);
             this.sender.sendMessage(changeRow);
             this.logger.info("2.2. Generated ChangeRow by method generateChangeRow() : " + changeRow);
         }
     }
 
-    @Around("execution(* com.hibernateTest.hibernateTest.service.defaultImplementation.*.update(*))")
+    @Around("execution(* com.hibernateTest.hibernateTest.service.modelsServicesImplementation.*.update(*))")
     public void updateAdvice(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         String method = proceedingJoinPoint.getSignature().getName();
         Class clazz = proceedingJoinPoint.getTarget().getClass();
@@ -94,7 +87,6 @@ public class HistoryLogger {
 
             if(newValue != null && oldValue != null){
                 ChangeRow changeRow = generateChangeRow(oldValue, newValue, method);
-                this.changeRowService.addChangeRow(changeRow);
                 this.sender.sendMessage(changeRow);
                 this.logger.info("3.3. Generated ChangeRow by method generateChangeRow() : " + changeRow);
             }
@@ -116,13 +108,14 @@ public class HistoryLogger {
 
     private ChangeRow generateChangeRow(MainEntity oldValue, MainEntity newValue, String method){
         ChangeRow changeRow = new ChangeRow();
+        MainEntity metaData = oldValue == null ? newValue : oldValue;
         changeRow.setUsername(this.getUsername());
         changeRow.setDateChange(MyDateTimeFormatter.format(LocalDateTime.now()));
-        changeRow.setVersion(newValue.getVersion());
+        changeRow.setVersion(metaData.getVersion());
         changeRow.setMethodName(method);
-        changeRow.setTableName(newValue.getClass().getSimpleName().toLowerCase() + "s");
-        changeRow.setNewValue(newValue.toString());
-        changeRow.setOldValue(oldValue.toString());
+        changeRow.setTableName(metaData.getClass().getSimpleName().toLowerCase() + "s");
+        changeRow.setNewValue(newValue == null ? "" : newValue.toString());
+        changeRow.setOldValue(oldValue == null ? "" : oldValue.toString());
         return changeRow;
     }
 
