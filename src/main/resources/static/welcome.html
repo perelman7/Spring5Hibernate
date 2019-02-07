@@ -11,7 +11,7 @@
 <body>
     <div class="login_page">
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <a class="navbar-brand" href="/loginPage.html">EMPLOYEE PROJECT</a>
+            <a class="navbar-brand" href="/welcome.html">EMPLOYEE PROJECT</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar1" aria-controls="navbar1"
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -23,7 +23,10 @@
                         <a class="btn btn-block btn-light" href="/main.html">Main Page<span class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item active">
-                        <a class="btn btn-block btn-light" href="/singinG">Sing in page<span class="sr-only">(current)</span></a>
+                        <a class="btn btn-block btn-light" href="/singinG">OAuth info<span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="btn btn-block btn-light" href="/test">Basic info<span class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item active">
                         <a class="btn btn-block btn-light" href="/swagger-ui.html">Swagger<span class="sr-only">(current)</span></a>
@@ -34,9 +37,33 @@
                 </div>
             </div>
         </nav>
-        <div class="container h-100">
+        <div class="container-fluid">
             <div class="name_login">
                 <h1>Login page!</h1>
+            </div>
+            <div class="row">
+                <div class="col-lg-4">
+                    <div>
+                        <h1>Login</h1>
+                    </div>
+                    <form action="login" method='POST'>
+                        <table>
+                            <tr>
+                                <td>User:</td>
+                                <td><input type='text' name='username' value=''></td>
+                            </tr>
+                            <tr>
+                                <td>Password:</td>
+                                <td><input type='password' name='password' /></td>
+                            </tr>
+                            <tr>
+                                <td><input name="submit" type="submit" value="submit" /></td>
+                            </tr>
+                        </table>
+                    </form>
+                </div>
+                <div class="col-lg-4"></div>
+                <div class="col-lg-4"></div>
             </div>
         </div>
     </div>

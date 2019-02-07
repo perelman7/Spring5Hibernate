@@ -9,8 +9,11 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter;
@@ -21,6 +24,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.servlet.Filter;
+import javax.sql.DataSource;
 
 @Configuration
 @EnableOAuth2Client
@@ -31,17 +35,39 @@ public class WebGoogleOAuthConfiguration extends WebSecurityConfigurerAdapter {
     @Qualifier("oauth2ClientContext")
     OAuth2ClientContext oauth2ClientContext;
 
+    @Autowired
+    private DataSource dataSource;
+
     @Override
-    protected void configure(HttpSecurity http) throws Exception {
+    protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
+        auth.jdbcAuthentication()
+                .dataSource(dataSource)
+                .passwordEncoder(this.passwordEncoder())
+                .usersByUsernameQuery("select username, passwd, enable from userbasic where username=?")
+                .authoritiesByUsernameQuery("select username, role from user_role_basic where username=?");
+    }
+
+    @Override
+    protected void configure(final HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/", "/v2/**", "/swagger-resources/**",  "/webjars/**", "/swagger-ui.html", "/login**", "/loginPage.html", "/css/**", "/img/**",  "/js/**").permitAll()
+                .antMatchers("/", "/welcome**", "/v2/**", "/swagger**",  "/webjars/**", "/login*", "/css/**", "/img/**",  "/js/**").permitAll()
                 .anyRequest().authenticated()
-                .and().formLogin().failureForwardUrl("/loginPage.html").loginPage("/loginPage.html").successForwardUrl("/main.html")
+                .and()
+                .formLogin()
+                .loginPage("/welcome.html").usernameParameter("username").passwordParameter("password")
+                .loginProcessingUrl("/login")
+                .defaultSuccessUrl("/main.html", true)
                 .and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).invalidateHttpSession(true).deleteCookies("JSESSIONID")
                 .and().addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);
     }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
     private Filter ssoFilter() {
         OAuth2ClientAuthenticationProcessingFilter googleFilter = new OAuth2ClientAuthenticationProcessingFilter("/login/google");
         OAuth2RestTemplate googleTemplate = new OAuth2RestTemplate(google(), oauth2ClientContext);

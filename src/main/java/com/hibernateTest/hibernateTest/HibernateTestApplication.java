@@ -10,6 +10,7 @@ public class HibernateTestApplication extends SpringBootServletInitializer {
 
     public static void main(String[] args) throws Exception {
         SpringApplication.run(HibernateTestApplication.class, args);
+
     }
 
     @Override

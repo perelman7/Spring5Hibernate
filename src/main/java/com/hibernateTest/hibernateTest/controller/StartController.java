@@ -8,14 +8,18 @@ import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.view.RedirectView;
 
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -62,5 +66,17 @@ public class StartController {
         String surname = userDetails.get("family_name");
 
         return "Authorize {id: " + id + ", email: " + email + ", name: " + name + ", surname: " + surname + ", role: " +role;
+    }
+
+    @GetMapping("/test")
+    public String test(Authentication authentication){
+
+        User user = (User)authentication.getPrincipal();
+        Collection<GrantedAuthority> authorities = user.getAuthorities();
+        GrantedAuthority grantedAuthority = (GrantedAuthority) authorities.toArray()[0];
+        String role = grantedAuthority.getAuthority();
+        String name = user.getUsername();
+
+        return "Name: " + name + ", with role: " + role ;
     }
 }
