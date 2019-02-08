@@ -1,5 +1,7 @@
 package com.hibernateTest.hibernateTest.configuration.oauth2;
 
+import com.hibernateTest.hibernateTest.configuration.jwt.JwtTokenFilterConfigurer;
+import com.hibernateTest.hibernateTest.service.jwtService.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
@@ -38,6 +40,14 @@ public class WebGoogleOAuthConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     private DataSource dataSource;
 
+    @Autowired
+    @Qualifier("jwtTokenProvider")
+    private JwtTokenProvider jwtTokenProvider;
+
+    @Autowired
+    @Qualifier("jwtTokenFilterConfigurer")
+    private JwtTokenFilterConfigurer jwtTokenFilterConfigurer;
+
     @Override
     protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
         auth.jdbcAuthentication()
@@ -51,16 +61,23 @@ public class WebGoogleOAuthConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(final HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
+                //.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                //.and()
                 .authorizeRequests()
-                .antMatchers("/", "/welcome**", "/v2/**", "/swagger**",  "/webjars/**", "/login*", "/css/**", "/img/**",  "/js/**").permitAll()
+                .antMatchers("/","/singup**", "/welcome**", "/v2/**", "/swagger**",  "/webjars/**", "/login*", "/css/**", "/img/**",  "/js/**").permitAll()
                 .anyRequest().authenticated()
+                .and()
+                .exceptionHandling().accessDeniedPage("/welcome.html")
                 .and()
                 .formLogin()
                 .loginPage("/welcome.html").usernameParameter("username").passwordParameter("password")
                 .loginProcessingUrl("/login")
                 .defaultSuccessUrl("/main.html", true)
-                .and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).invalidateHttpSession(true).deleteCookies("JSESSIONID")
-                .and().addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);
+                .and()
+                .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).invalidateHttpSession(true).deleteCookies("JSESSIONID")
+                .and()
+                .addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class)
+                .apply(jwtTokenFilterConfigurer);
     }
 
     @Bean

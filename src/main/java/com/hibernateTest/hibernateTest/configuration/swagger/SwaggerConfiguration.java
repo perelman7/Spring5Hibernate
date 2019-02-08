@@ -1,4 +1,4 @@
-package com.hibernateTest.hibernateTest.configuration.oauth2;
+package com.hibernateTest.hibernateTest.configuration.swagger;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

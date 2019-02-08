@@ -62,10 +62,50 @@
                         </table>
                     </form>
                 </div>
-                <div class="col-lg-4"></div>
-                <div class="col-lg-4"></div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4">
+                    <div>
+                        <h1>Sing up</h1>
+                    </div>
+                    <form action="singup" method='POST'>
+                        <table>
+                            <tr>
+                                <td>User:</td>
+                                <td><input type='text' name='username' value=''></td>
+                            </tr>
+                            <tr>
+                                <td>Password:</td>
+                                <td><input type='password' name='password' id="password" /></td>
+                            </tr>
+                            <tr>
+                                <td>Confirm password:</td>
+                                <td><input type='password' name='confirm_password' id="confirm_password" /></td>
+                            </tr>
+                            <tr>
+                                <td><input name="submit" type="submit" value="submit" /></td>
+                            </tr>
+                        </table>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
+
+    <script type="text/javascript">
+        var password = document.getElementById("password"),
+            confirm_password = document.getElementById("confirm_password");
+
+        function validatePassword(){
+            if(password.value != confirm_password.value) {
+                confirm_password.setCustomValidity("Passwords Don't Match");
+            } else {
+                confirm_password.setCustomValidity('');
+            }
+        }
+
+        password.onchange = validatePassword;
+        confirm_password.onkeyup = validatePassword;
+    </script>
 </body>
 </html>

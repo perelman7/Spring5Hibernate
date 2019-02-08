@@ -1,6 +1,11 @@
 package com.hibernateTest.hibernateTest.controller;
 
+import com.hibernateTest.hibernateTest.service.jwtService.JwtTokenProvider;
+import com.hibernateTest.hibernateTest.model.basicAuthorizarion.UserBasic;
+import com.hibernateTest.hibernateTest.model.basicAuthorizarion.UserRoleBasic;
+import com.hibernateTest.hibernateTest.repository.basicAuthorization.UserRoleBasicRepository;
 import com.hibernateTest.hibernateTest.service.ChangeRowService;
+import com.hibernateTest.hibernateTest.service.basicAuthorization.defaultImplementation.DefaultUserBasicService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -11,14 +16,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -31,6 +34,22 @@ public class StartController {
     @Autowired
     @Qualifier("defaultChangeRowService")
     private ChangeRowService service;
+
+    @Autowired
+    @Qualifier("jwtTokenProvider")
+    private JwtTokenProvider provider;
+
+    @Autowired
+    @Qualifier("passwordEncoder")
+    private PasswordEncoder encoder;
+
+    @Autowired
+    @Qualifier("defaultUserBasicService")
+    private DefaultUserBasicService userService;
+
+    @Autowired
+    @Qualifier("userRoleBasicRepository")
+    private UserRoleBasicRepository roleRepository;
 
     @GetMapping
     @ApiOperation(value = "if user is authorized: return main page")
@@ -73,10 +92,38 @@ public class StartController {
 
         User user = (User)authentication.getPrincipal();
         Collection<GrantedAuthority> authorities = user.getAuthorities();
-        GrantedAuthority grantedAuthority = (GrantedAuthority) authorities.toArray()[0];
-        String role = grantedAuthority.getAuthority();
+
+        List<UserRoleBasic> roles = new ArrayList<>();
+        for (int i = 0; i < authorities.size(); i++){
+            GrantedAuthority grantedAuthority = (GrantedAuthority) authorities.toArray()[i];
+            UserRoleBasic role = new UserRoleBasic();
+            role.setRole(grantedAuthority.getAuthority());
+            roles.add(role);
+        }
         String name = user.getUsername();
 
-        return "Name: " + name + ", with role: " + role ;
+        String token = provider.createToken(name, roles);
+
+        return "Name: " + name + ", with role: " + roles.toString() +", token: " + token ;
+    }
+
+    @PostMapping("/singup")
+    public RedirectView singup(@RequestParam("username") String username, @RequestParam("password") String password){
+        System.out.println(username + " " + password);
+
+        UserBasic user = new UserBasic();
+        user.setUsername(username);
+        user.setPasswd(encoder.encode(password));
+        user.setEnable(true);
+
+        UserRoleBasic role = new UserRoleBasic();
+        role.setRole("ROLE_USER");
+        role.setUserBasic(user);
+
+        userService.add(user);
+        roleRepository.save(role);
+
+        return new RedirectView("welcome.html");
+
     }
 }

@@ -1,4 +1,4 @@
-package com.hibernateTest.hibernateTest.configuration.oauth2;
+package com.hibernateTest.hibernateTest.configuration.aop;
 
 import com.hibernateTest.hibernateTest.aop.HistoryLogger;
 import org.springframework.context.annotation.Bean;

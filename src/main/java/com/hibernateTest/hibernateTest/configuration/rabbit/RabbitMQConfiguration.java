@@ -1,4 +1,4 @@
-package com.hibernateTest.hibernateTest.configuration.oauth2;
+package com.hibernateTest.hibernateTest.configuration.rabbit;
 
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
